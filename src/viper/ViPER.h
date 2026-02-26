@@ -31,6 +31,7 @@ public:
     void process(std::vector<float>& buffer, uint32_t size);
     void DispatchCommand(int param, int val1, int val2, int val3, int val4, uint32_t arrSize, signed char *arr);
     void resetAllEffects();
+    uint32_t GetConvolverKernelID() const;
 
     std::atomic<bool> updateProcessTime;
     std::atomic<uint64_t> processTimeMs;

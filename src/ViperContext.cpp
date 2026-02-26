@@ -229,7 +229,7 @@ int32_t ViperContext::handleGetParam(effect_param_t *pCmdParam, effect_param_t *
         case PARAM_GET_CONVOLUTION_KERNEL_ID: {
             pReplyParam->status = 0;
             pReplyParam->vsize = sizeof(uint32_t);
-            *(uint32_t *) (pReplyParam->data + vOffset) = viper.convolver.GetKernelID();
+            *(uint32_t *) (pReplyParam->data + vOffset) = viper.GetConvolverKernelID();
             *pReplySize = sizeof(effect_param_t) + pReplyParam->psize + vOffset + pReplyParam->vsize;
             return 0;
         }

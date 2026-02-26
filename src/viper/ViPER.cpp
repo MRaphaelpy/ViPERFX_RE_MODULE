@@ -494,6 +494,10 @@ void ViPER::DispatchCommand(int param, int val1, int val2, int val3, int val4, u
     }
 }
 
+uint32_t ViPER::GetConvolverKernelID() const {
+    return this->convolver.GetKernelID();
+}
+
 void ViPER::resetAllEffects() {
     this->adaptiveBuffer.FlushBuffer();
 
