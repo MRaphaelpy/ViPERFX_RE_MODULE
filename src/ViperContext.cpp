@@ -200,7 +200,7 @@ int32_t ViperContext::handleGetParam(effect_param_t *pCmdParam, effect_param_t *
             return 0;
         }
         case PARAM_GET_STREAMING: { // Is processing
-            auto now = std::chrono::system_clock::now();
+            auto now = std::chrono::steady_clock::now();
             auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
 
             uint64_t currentMs = now_ms.time_since_epoch().count();
@@ -417,11 +417,7 @@ static audio_buffer_t *getBuffer(buffer_config_s *config, audio_buffer_t *buffer
 }
 
 int32_t ViperContext::process(audio_buffer_t *inBuffer, audio_buffer_t *outBuffer) {
-    if (disableReason != DisableReason::NONE) {
-        return -EINVAL;
-    }
-
-    if (!enabled) {
+    if (disableReason != DisableReason::NONE || !enabled) {
         return -ENODATA;
     }
     

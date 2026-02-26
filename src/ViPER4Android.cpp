@@ -68,6 +68,7 @@ static int32_t viperLibraryRelease(effect_handle_t handle) {
     if (viperHandle == nullptr) return -EINVAL;
 
     delete viperHandle->context;
+    delete viperHandle;
     return 0;
 }
 

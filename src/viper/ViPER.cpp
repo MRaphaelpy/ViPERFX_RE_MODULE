@@ -2,6 +2,7 @@
 #include <cstring>
 #include <chrono>
 #include "constants.h"
+#include "../log.h"
 
 ViPER::ViPER() : 
     updateProcessTime(false),
@@ -143,8 +144,8 @@ void ViPER::process(std::vector<float>& buffer, uint32_t size) {
 
 //    VIPER_LOGD("Process buffer size: %d", tmpBufSize);
     if (tmpBufSize != 0) {
-        this->viperDdc.Process(tmpBuf, size);
-        this->spectrumExtend.Process(tmpBuf, size);
+        this->viperDdc.Process(tmpBuf, tmpBufSize);
+        this->spectrumExtend.Process(tmpBuf, tmpBufSize);
         this->iirFilter.Process(tmpBuf, tmpBufSize);
         this->colorfulMusic.Process(tmpBuf, tmpBufSize);
         this->diffSurround.Process(tmpBuf, tmpBufSize);
@@ -156,7 +157,7 @@ void ViPER::process(std::vector<float>& buffer, uint32_t size) {
         this->viperBass.Process(tmpBuf, tmpBufSize);
         this->viperClarity.Process(tmpBuf, tmpBufSize);
         this->cure.Process(tmpBuf, tmpBufSize);
-        this->tubeSimulator.TubeProcess(tmpBuf, size);
+        this->tubeSimulator.TubeProcess(tmpBuf, tmpBufSize);
         this->analogX.Process(tmpBuf, tmpBufSize);
 
         if (this->frameScale != 1.0) {
@@ -182,8 +183,8 @@ void ViPER::process(std::vector<float>& buffer, uint32_t size) {
         }
     }
 
-    memmove(buffer.data() + (size - tmpBufSize) * 2, buffer.data(), tmpBufSize * sizeof(float));
-    memset(buffer.data(), 0, (size - tmpBufSize) * sizeof(float));
+    memmove(buffer.data() + (size - tmpBufSize) * 2, buffer.data(), tmpBufSize * 2 * sizeof(float));
+    memset(buffer.data(), 0, (size - tmpBufSize) * 2 * sizeof(float));
 }
 
 void ViPER::DispatchCommand(int param, int val1, int val2, int val3, int val4, uint32_t arrSize,
@@ -199,7 +200,7 @@ void ViPER::DispatchCommand(int param, int val1, int val2, int val3, int val4, u
             break;
         }
         case PARAM_CONVOLUTION_ENABLE: {
-//            this->convolver.SetEnabled(val1 != 0);
+            this->convolver.SetEnable(val1 != 0);
             break;
         } // 0x10002
         case PARAM_CONVOLUTION_PREPARE_BUFFER: {
@@ -442,7 +443,7 @@ void ViPER::DispatchCommand(int param, int val1, int val2, int val3, int val4, u
             break;
         } // 0x1004A
         case PARAM_FET_COMPRESSOR_RATIO: {
-            this->fetCompressor.SetParameter(FETCompressor::THRESHOLD, (float) val1 / 100.0f);
+            this->fetCompressor.SetParameter(FETCompressor::RATIO, (float) val1 / 100.0f);
             break;
         } // 0x1004B
         case PARAM_FET_COMPRESSOR_KNEE: {
@@ -477,7 +478,7 @@ void ViPER::DispatchCommand(int param, int val1, int val2, int val3, int val4, u
             break;
         } // 0x10055
         case PARAM_FET_COMPRESSOR_MAX_RELEASE: {
-            this->fetCompressor.SetParameter(FETCompressor::MAX_ATTACK, (float) val1 / 100.0f);
+            this->fetCompressor.SetParameter(FETCompressor::MAX_RELEASE, (float) val1 / 100.0f);
             break;
         } // 0x10056
         case PARAM_FET_COMPRESSOR_CREST: {
@@ -487,7 +488,7 @@ void ViPER::DispatchCommand(int param, int val1, int val2, int val3, int val4, u
             break;
         } // 0x10058
         case PARAM_FET_COMPRESSOR_NO_CLIP: {
-            this->fetCompressor.SetParameter(FETCompressor::ADAPT, (float) val1 / 100.0f);
+            this->fetCompressor.SetParameter(FETCompressor::NO_CLIP, (float) val1 / 100.0f);
             break;
         } // 0x10059
     }

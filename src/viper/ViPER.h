@@ -22,21 +22,21 @@
 #include "effects/PlaybackGain.h"
 #include "../ViPER4Android.h"
 #include <array>
+#include <atomic>
 
 class ViPER {
 public:
     ViPER();
 
     void process(std::vector<float>& buffer, uint32_t size);
-    // TODO: Parameter types/names
     void DispatchCommand(int param, int val1, int val2, int val3, int val4, uint32_t arrSize, signed char *arr);
     void resetAllEffects();
 
-//private:
-    bool updateProcessTime;
-    uint64_t processTimeMs;
+    std::atomic<bool> updateProcessTime;
+    std::atomic<uint64_t> processTimeMs;
     uint32_t samplingRate;
 
+private:
     // Effects
     AdaptiveBuffer adaptiveBuffer;
     WaveBuffer waveBuffer;
