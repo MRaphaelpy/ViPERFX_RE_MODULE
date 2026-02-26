@@ -181,7 +181,7 @@ bool Convolver::GetEnabled() {
     return this->enable;
 }
 
-uint32_t Convolver::GetKernelID() {
+uint32_t Convolver::GetKernelID() const {
     return this->kernelId;
 }
 
